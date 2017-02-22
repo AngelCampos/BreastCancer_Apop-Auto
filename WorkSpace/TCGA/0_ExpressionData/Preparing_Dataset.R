@@ -6,7 +6,8 @@
 # Loading dataset and clinical info ############################################
 sClinical <- read.delim("data_bcr_clinical_data_sample.txt", header = T,skip= 5)
 pClinical <- read.delim("data_bcr_clinical_data_patient.txt", header= T,skip= 5)
-data <- read.delim("expMatrix_TCGA_cBioPortal.txt", row.names = 1, header = T)
+data <- as.matrix(read.delim("expMatrix_TCGA_cBioPortal.txt", row.names = 1, 
+                             header = T))
 normals <- read.delim("normals_TCGA_cBioPortal.txt", header = T)
 rownames(normals) <- "NORMAL.LOGICAL"
 
@@ -23,12 +24,10 @@ femaleSamples <- gsub(pattern = "-", ".", femaleSamples)
 
 # Without male data and normals
 onlyFemData <- data[,!colnames(data) %in% maleSamples]
-onlyFemNormals <- normals[,!colnames(normals) %in% maleSamples]
+onlyFemNormals <- (normals[,!colnames(normals) %in% maleSamples])
+normals_TCGA <- as.logical(onlyFemNormals); names(normals_TCGA) <- colnames(onlyFemNormals)
+exp.matrix_TCGA <- log2(onlyFemData+1)
 
-#Write results #################################################################
-write.table(onlyFemData, "expMatrix_TCGA_onlyFemales.txt",quote = F, sep = "\t",
-            col.names = NA )
-write.table(onlyFemNormals, "normals_TCGA_onlyFemales.txt", quote = F, 
-	        sep = "\t", col.names = NA)
-save(onlyFemData, file = "expMatrix_TCGA_onlyFemales.Rdata")
-save(onlyFemNormals, file = "normals_TCGA_onlyFemales.Rdata")
+# Save results #################################################################
+save(exp.matrix_TCGA, file = "expMatrix_TCGA_onlyFemales.Rdata")
+save(normals_TCGA, file = "normals_TCGA_onlyFemales.Rdata")
