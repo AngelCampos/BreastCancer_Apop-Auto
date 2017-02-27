@@ -73,8 +73,7 @@ for (i in 1:nrow(PW)){
   PWnames <- rbind(PWnames, x); rm(x)
 }
 PWnames <- gsub(pattern = "_",replacement = " ", x = PWnames)
-write.table(PWnames, file = "Pathways_Correlation_METABRIC_0.01.txt", sep = "\t", 
-            quote = F, col.names = F, row.names = F)
+save(PWnames, file = "PathsCorrelation_0.01.Rdata")
 
 #BEST 5%
 PW <- NULL
@@ -91,13 +90,10 @@ for (i in 1:nrow(PW)){
   PWnames <- rbind(PWnames, x); rm(x)
 }
 PWnames <- gsub(pattern = "_",replacement = " ", x = PWnames)
-write.table(PWnames, file = "Pathways_Correlation_METABRIC_0.05.txt", sep = "\t", 
-            quote = F, col.names = F, row.names = F)
+save(PWnames, file = "PathsCorrelation_0.05.Rdata")
 
 # PLotting PDS of best and worst correlations ##################################
 # Best
-x <- which(SCmatrix == max(SCmatrix), arr.ind = T)
-plot(fPDS[rownames(SCmatrix)[x[1]],], fPDS[colnames(SCmatrix)[x[2]],])
 
 # 4 of the selected correlations
 png(filename = "BestCorrelations.png")
@@ -125,6 +121,3 @@ plot(fPDS[badPW[2,1],], fPDS[badPW[2,2],])
 plot(fPDS[badPW[3,1],], fPDS[badPW[3,2],])
 plot(fPDS[badPW[4,1],], fPDS[badPW[4,2],])
 dev.off()
-
-# Check-Point! #################################################################
-save.image()

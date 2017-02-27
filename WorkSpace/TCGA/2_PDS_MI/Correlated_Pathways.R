@@ -13,7 +13,7 @@ load("fPDS.Rdata")
 load("ZscorePDS_TCGA.Rdata")
 setwd("..")
 setwd("0_ExpressionData/")
-normals <- as.matrix(read.delim("normals_TCGA_onlyFemales.txt", row.names = 1))
+load("normals_TCGA_onlyFemales.Rdata")
 setwd("..")
 setwd("0_Genesets/")
 member <- as.matrix(read.delim("GOids_Apoptosis_Autophagy_Membership.txt", 
@@ -72,8 +72,7 @@ for (i in 1:nrow(PW)){
   PWnames <- rbind(PWnames, x); rm(x)
 }
 PWnames <- gsub(pattern = "_",replacement = " ", x = PWnames)
-write.table(PWnames, file = "Pathways_Correlation_TCGA_0.01.txt", sep = "\t", 
-            quote = F, col.names = F, row.names = F)
+save(PWnames, file = "PathsCorrelation_0.01.Rdata")
 
 #BEST 5%
 PW <- NULL
@@ -90,13 +89,10 @@ for (i in 1:nrow(PW)){
   PWnames <- rbind(PWnames, x); rm(x)
 }
 PWnames <- gsub(pattern = "_",replacement = " ", x = PWnames)
-write.table(PWnames, file = "Pathways_Correlation_TCGA_0.05.txt", sep = "\t", 
-            quote = F, col.names = F, row.names = F)
+save(PWnames, file = "PathsCorrelation_0.05.Rdata")
 
 # PLotting PDS of best and worst correlations ##################################
 # Best
-x <- which(SCmatrix == max(SCmatrix), arr.ind = T)
-plot(fPDS[rownames(SCmatrix)[x[1]],], fPDS[colnames(SCmatrix)[x[2]],])
 
 # 4 of the selected correlations
 png(filename = "BestCorrelations.png")
@@ -125,5 +121,5 @@ plot(fPDS[badPW[3,1],], fPDS[badPW[3,2],])
 plot(fPDS[badPW[4,1],], fPDS[badPW[4,2],])
 dev.off()
 
-# Check-Point! #################################################################
-save.image()
+# Heatmap of correlated Pathways
+
