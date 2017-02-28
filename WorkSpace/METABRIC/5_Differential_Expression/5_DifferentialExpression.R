@@ -30,6 +30,7 @@ selected <- c(names(missmatchN)[!missmatchN], names(missmatchT)[!missmatchT])
 exp.data <- exp.data[,selected]
 normals <- normals[selected]
 subg <- subg[selected]
+save(subg, file = "Subgroup_filtered.Rdata")
 
 # Differential Expression Analysis (LIMMA) & Volcano plots #####################
 # Design matrix

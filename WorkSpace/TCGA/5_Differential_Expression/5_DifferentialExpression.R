@@ -30,6 +30,7 @@ selected <- c(names(missmatchN)[!missmatchN], names(missmatchT)[!missmatchT])
 exp.matrix_TCGA <- exp.matrix_TCGA[,selected]
 normals_TCGA <- normals_TCGA[selected]
 subg <- subg[selected]
+save(subg, file = "Subgroup_filtered.Rdata")
 
 # Differential Expression Analysis (LIMMA) & Volcano plots #####################
 # Design matrix
