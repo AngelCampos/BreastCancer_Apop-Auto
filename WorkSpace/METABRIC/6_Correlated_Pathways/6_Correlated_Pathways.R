@@ -91,7 +91,7 @@ s3 <- apply(fPDS[,names(subg[subg == 3])],1, median)
 s4 <- apply(fPDS[,names(subg[subg == 4])],1, median)
 s5 <- apply(fPDS[,names(subg[subg == 5])],1, median)
 subgPDS <- cbind(s1,s2,s3,s4,s5)
-colnames(subgPDS) <- c("LumA", "Healthy","Basal", "LumB", "Her2" )
+colnames(subgPDS) <- c("Healthy", "LumA","LumB", "Her2", "Basal" )
 
 row.distance = dist(subgPDS, method = "euclidean")
 row.cluster = hclust(row.distance, method = "ward.D2")

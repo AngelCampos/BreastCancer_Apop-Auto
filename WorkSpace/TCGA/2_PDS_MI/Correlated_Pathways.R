@@ -4,6 +4,7 @@
 ################################################################################
 # Load packages ################################################################
 library(gplots)
+library(RColorBrewer)
 
 # Load data ####################################################################
 wd <- getwd()
@@ -20,6 +21,8 @@ member <- as.matrix(read.delim("GOids_Apoptosis_Autophagy_Membership.txt",
                                header = F, row.names = 1))
 setwd(wd)
 rm(wd)
+load("C:/Users/Fang/Google Drive/Science/BreastCancer_AA Project/WorkSpace/TCGA/4_Subgroups/Subgroups.Rdata")
+subg <- mytree; rm(mytree)
 
 # Membership ###################################################################
 M <- member[rownames(fPDS),2]
@@ -91,17 +94,21 @@ for (i in 1:nrow(PW)){
 PWnames <- gsub(pattern = "_",replacement = " ", x = PWnames)
 save(PWnames, file = "PathsCorrelation_0.05.Rdata")
 
-# PLotting PDS of best and worst correlations ##################################
-# Best
+# Plotting PDS of best and worst correlations ##################################
+# Subtype colors
+scolors <- as.factor(subg)
+scolors <- brewer.pal(5, "Set1")[subg]
 
-# 4 of the selected correlations
-png(filename = "BestCorrelations.png")
+# 4 best correlations
+png(filename = "BestCorrelations.png", width = 750, height = 750)
 par(mfrow=c(2,2))
-plot(fPDS[PW[1,1],], fPDS[PW[1,2],])
-plot(fPDS[PW[2,1],], fPDS[PW[2,2],])
-plot(fPDS[PW[3,1],], fPDS[PW[3,2],])
-plot(fPDS[PW[4,1],], fPDS[PW[4,2],])
+par(pch= 19)
+plot(fPDS[PW[1,1],], fPDS[PW[1,2],], col = scolors)
+plot(fPDS[PW[2,1],], fPDS[PW[2,2],], col = scolors)
+plot(fPDS[PW[3,1],], fPDS[PW[3,2],], col = scolors)
+plot(fPDS[PW[4,1],], fPDS[PW[4,2],], col = scolors)
 dev.off()
+
 
 # Worst correlations
 #Worst
@@ -113,13 +120,24 @@ for(i in 1:nrow(WORST)){
 }
 badPW <- badPW[order(badPW[,3], decreasing = F),]
 
-png(filename = "WorstCorrelations.png")
+png(filename = "WorstCorrelations.png", width = 750, height = 750)
 par(mfrow=c(2,2))
-plot(fPDS[badPW[1,1],], fPDS[badPW[1,2],])
-plot(fPDS[badPW[2,1],], fPDS[badPW[2,2],])
-plot(fPDS[badPW[3,1],], fPDS[badPW[3,2],])
-plot(fPDS[badPW[4,1],], fPDS[badPW[4,2],])
+par(pch= 19)
+plot(fPDS[badPW[1,1],], fPDS[badPW[1,2],], col = scolors)
+plot(fPDS[badPW[2,1],], fPDS[badPW[2,2],], col = scolors)
+plot(fPDS[badPW[3,1],], fPDS[badPW[3,2],], col = scolors)
+plot(fPDS[badPW[4,1],], fPDS[badPW[4,2],], col = scolors)
 dev.off()
 
-# Heatmap of correlated Pathways
+# Plotting correlated PDSs
+sPDS <- fPDS[unique(as.character(PW[,1:2])),] # PDS matrix of correlated PDSs
 
+png(filename = "AllPDS.png", width = 1200, height = 300)
+par(pch=16)
+plot(sPDS[1,], rep(1, ncol(sPDS)), col = scolors, 
+     xlim = c(0,1), ylim = c(0,nrow(sPDS)), main= "Correlated PDSs Samples",
+     xlab = "PDS", ylab = "Pathways")
+for(i in 2:nrow(sPDS)){
+  points(sPDS[i,], rep(i, ncol(sPDS)), col = scolors, xlim = c(0,1), ylim = c(0,ncol(sPDS)))
+}
+dev.off()
